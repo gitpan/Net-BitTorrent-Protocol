@@ -3,6 +3,7 @@ Changes
 lib/Net/BitTorrent/Protocol.pm
 lib/Net/BitTorrent/Protocol/BEP03.pm
 lib/Net/BitTorrent/Protocol/BEP03/Bencode.pm
+lib/Net/BitTorrent/Protocol/BEP05.pm
 lib/Net/BitTorrent/Protocol/BEP06.pm
 lib/Net/BitTorrent/Protocol/BEP07.pm
 lib/Net/BitTorrent/Protocol/BEP10.pm
@@ -10,6 +11,7 @@ lib/Net/BitTorrent/Protocol/BEP23.pm
 MANIFEST			This list of files
 META.json
 META.yml
+README
 t/0000_net_bittorrent_protocol.t
 t/0003_net_bittorrent_protocol_bep03.t
 t/0003_net_bittorrent_protocol_bep03_bencode.t
