@@ -1,7 +1,7 @@
 package Net::BitTorrent::Protocol;
 use strict;
 use warnings;
-our $MAJOR = 0; our $MINOR = 9; our $PATCH = 0; our $DEV = 'rc5'; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[\S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
+our $MAJOR = 0; our $MINOR = 9; our $PATCH = 1; our $DEV = ''; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[\S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
 use lib '../../../lib';
 use Net::BitTorrent::Protocol::BEP03 qw[:all];
 use Net::BitTorrent::Protocol::BEP03::Bencode qw[:all];
@@ -42,7 +42,7 @@ $EXPORT_TAGS{'all'} = \@EXPORT_OK;
 my $parse_packet_dispatch;
 
 #
-sub parse_packet (\$) {
+sub parse_packet ($) {
     $parse_packet_dispatch ||= {$KEEPALIVE      => \&parse_keepalive,
                                 $CHOKE          => \&parse_choke,
                                 $UNCHOKE        => \&parse_unchoke,
@@ -78,21 +78,25 @@ sub parse_packet (\$) {
     }
     elsif (    (defined unpack('N', $$data))
            and (unpack('N', $$data) =~ m[\d]))
-    {   if ((unpack('N', $$data) <= length($$data))) {
+    {   my $packet_length = unpack('N', $$data);
+        if ($packet_length + 4 <= length($$data)) {
             (my ($packet_data), $$data) = unpack('N/aa*', $$data);
             my $packet_length = 4 + length $packet_data;
             (my ($type), $packet_data) = unpack('ca*', $packet_data);
             if (defined $parse_packet_dispatch->{$type}) {
                 my $payload = $parse_packet_dispatch->{$type}($packet_data);
-                $packet = {type          => $type,
-                           packet_length => $packet_length,
-                           (defined $payload ?
-                                (payload        => $payload,
-                                 payload_length => length $packet_data
-                                )
-                            : (payload_length => 0)
-                           ),
-                };
+                $packet
+                    = ref $payload eq 'HASH'
+                    && defined $payload->{error} ? $payload
+                    : {type          => $type,
+                       packet_length => $packet_length,
+                       (defined $payload ? (
+                                         payload        => $payload,
+                                         payload_length => length $packet_data
+                            )
+                        : (payload_length => 0)
+                       ),
+                    };
             }
             elsif (eval 'require Data::Dump') {
                 carp
@@ -197,6 +201,9 @@ L<BEP10|Net::BitTorrent::Protocol::BEP10>.
 =back
 
 =head1 See Also
+
+L<AnyEvent::BitTorrent> - Simple client which uses
+L<Net::BitTorrent::Protocol>
 
 http://bittorrent.org/beps/bep_0003.html - The BitTorrent Protocol
 Specification

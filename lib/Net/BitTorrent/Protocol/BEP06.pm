@@ -1,5 +1,5 @@
 package Net::BitTorrent::Protocol::BEP06;
-our $MAJOR = 0; our $MINOR = 9; our $PATCH = 0; our $DEV = 'rc5'; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
+our $MAJOR = 0; our $MINOR = 9; our $PATCH = 1; our $DEV = ''; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
 use Carp qw[carp];
 use vars qw[@EXPORT_OK %EXPORT_TAGS];
 use Exporter qw[];
@@ -78,8 +78,7 @@ sub build_allowed_fast ($) {
 sub parse_suggest ($) {
     my ($packet) = @_;
     if ((!$packet) || (length($packet) < 1)) {
-        carp 'Incorrect packet length for SUGGEST';
-        return;
+        return {error => 'Incorrect packet length for SUGGEST'};
     }
     return unpack('N', $packet);
 }
@@ -89,9 +88,11 @@ sub parse_have_none ($) { return; }
 sub parse_reject ($) {
     my ($packet) = @_;
     if ((!$packet) || (length($packet) < 9)) {
-        carp sprintf('Incorrect packet length for REJECT (%d requires >=9)',
-                     length($packet || ''));
-        return;
+        return {error =>
+                    sprintf(
+                       'Incorrect packet length for REJECT (%d requires >=9)',
+                       length($packet || ''))
+        };
     }
     return ([unpack('N3', $packet)]);
 }
@@ -99,8 +100,7 @@ sub parse_reject ($) {
 sub parse_allowed_fast ($) {
     my ($packet) = @_;
     if ((!$packet) || (length($packet) < 1)) {
-        carp 'Incorrect packet length for FASTSET';
-        return;
+        return {error => 'Incorrect packet length for FASTSET'};
     }
     return unpack('N', $packet);
 }

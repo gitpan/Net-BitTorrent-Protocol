@@ -1,5 +1,5 @@
 package Net::BitTorrent::Protocol::BEP03;
-our $MAJOR = 0; our $MINOR = 9; our $PATCH = 0; our $DEV = 'rc5'; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
+our $MAJOR = 0; our $MINOR = 9; our $PATCH = 1; our $DEV = ''; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
 use Carp qw[carp];
 use lib '../../../../lib';
 use vars qw[@EXPORT_OK %EXPORT_TAGS];
@@ -43,7 +43,7 @@ our $PORT           = 9;
 #
 my $info_hash_constraint;
 
-sub build_handshake ($$$) {
+sub build_handshake {
     my ($reserved, $infohash, $peerid) = @_;
     if ((!defined $reserved) || (length $reserved != 8)) {
         carp sprintf
@@ -65,13 +65,13 @@ sub build_handshake ($$$) {
         $reserved, $infohash,
         $peerid;
 }
-sub build_keepalive ()      { return pack('N',  0); }
-sub build_choke ()          { return pack('Nc', 1, 0); }
-sub build_unchoke ()        { return pack('Nc', 1, 1); }
-sub build_interested ()     { return pack('Nc', 1, 2); }
-sub build_not_interested () { return pack('Nc', 1, 3); }
+sub build_keepalive      { return pack('N',  0); }
+sub build_choke          { return pack('Nc', 1, 0); }
+sub build_unchoke        { return pack('Nc', 1, 1); }
+sub build_interested     { return pack('Nc', 1, 2); }
+sub build_not_interested { return pack('Nc', 1, 3); }
 
-sub build_have ($) {
+sub build_have {
     my ($index) = @_;
     if ((!defined $index) || ($index !~ m[^\d+$])) {
         carp sprintf
@@ -82,17 +82,20 @@ sub build_have ($) {
     return pack('NcN', 5, 4, $index);
 }
 
-sub build_bitfield ($) {
+sub build_bitfield {
     my ($bitfield) = @_;
-    if ((!$bitfield) || (unpack('B*', $bitfield) !~ m[^[01]+$])) {
+    if ((!$bitfield) || (unpack('b*', $bitfield) !~ m[^[01]+$])) {
         carp sprintf 'Malformed bitfield passed to %s::build_bitfield()',
             __PACKAGE__;
         return;
     }
-    return pack('Nca*', (length($bitfield) + 1), 5, $bitfield);
+    return
+        pack('Nca*',
+             (length($bitfield) + 1),
+             5, pack 'B*', unpack 'b*', $bitfield);
 }
 
-sub build_request ($$$) {
+sub build_request {
     my ($index, $offset, $length) = @_;
     if ((!defined $index) || ($index !~ m[^\d+$])) {
         carp sprintf
@@ -114,7 +117,7 @@ sub build_request ($$$) {
     return pack('Nca*', length($packed) + 1, 6, $packed);
 }
 
-sub build_piece ($$$) {
+sub build_piece {
     my ($index, $offset, $data) = @_;
     if ((!defined $index) || ($index !~ m[^\d+$])) {
         carp sprintf '%s::build_piece() requires an index parameter',
@@ -126,16 +129,16 @@ sub build_piece ($$$) {
             __PACKAGE__;
         return;
     }
-    if (!$data or !$$data) {
+    if (!defined $data) {
         carp sprintf '%s::build_piece() requires data to work with',
             __PACKAGE__;
         return;
     }
-    my $packed = pack('N2a*', $index, $offset, $$data);
+    my $packed = pack('N2a*', $index, $offset, $data);
     return pack('Nca*', length($packed) + 1, 7, $packed);
 }
 
-sub build_cancel ($$$) {
+sub build_cancel {
     my ($index, $offset, $length) = @_;
     if ((!defined $index) || ($index !~ m[^\d+$])) {
         carp sprintf
@@ -157,92 +160,94 @@ sub build_cancel ($$$) {
     return pack('Nca*', length($packed) + 1, 8, $packed);
 }
 
-sub build_port ($) {
+sub build_port {
     my ($port) = @_;
     if ((!defined $port) || ($port !~ m[^\d+$])) {
         carp sprintf '%s::build_port() requires an index parameter',
             __PACKAGE__;
         return;
     }
-    return pack('NcN', length($port) + 1, 9, $port);
+    return pack('Ncnn', length($port) + 1, 9, $port);
 }
 
-sub parse_handshake ($) {
+sub parse_handshake {
     my ($packet) = @_;
     if (!$packet || (length($packet) < 68)) {
-        carp 'Not enough data for handshake packet';
-        return;
+        return {error => 'Not enough data for HANDSHAKE'};
     }
     my ($protocol_name, $reserved, $infohash, $peerid)
         = unpack('c/a a8 a20 a20', $packet);
     if ($protocol_name ne 'BitTorrent protocol') {
-        carp sprintf('Improper handshake; Bad protocol name (%s)',
-                     $protocol_name);
-        return;
+        return {error => sprintf('Improper HANDSHAKE; Bad protocol name (%s)',
+                                 $protocol_name)
+        };
     }
     return [$reserved, $infohash, $peerid];
 }
-sub parse_keepalive ($)      { return; }
-sub parse_choke ($)          { return; }
-sub parse_unchoke ($)        { return; }
-sub parse_interested ($)     { return; }
-sub parse_not_interested ($) { return; }
+sub parse_keepalive      { return; }
+sub parse_choke          { return; }
+sub parse_unchoke        { return; }
+sub parse_interested     { return; }
+sub parse_not_interested { return; }
 
-sub parse_have ($) {
+sub parse_have {
     my ($packet) = @_;
     if ((!$packet) || (length($packet) < 1)) {
-        carp 'Incorrect packet length for HAVE';
-        return;
+        return {error => 'Incorrect packet length for HAVE'};
     }
     return unpack('N', $packet);
 }
 
-sub parse_bitfield ($) {
+sub parse_bitfield {
     my ($packet) = @_;
     if ((!$packet) || (length($packet) < 1)) {
-        carp 'Incorrect packet length for BITFIELD';
-        return;
+        return {error => 'Incorrect packet length for BITFIELD'};
     }
     return (pack 'b*', unpack 'B*', $packet);
 }
 
-sub parse_request ($) {
+sub parse_request {
     my ($packet) = @_;
     if ((!$packet) || (length($packet) < 9)) {
-        carp sprintf('Incorrect packet length for REQUEST (%d requires >=9)',
-                     length($packet || ''));
-        return;
+        return {error =>
+                    sprintf(
+                      'Incorrect packet length for REQUEST (%d requires >=9)',
+                      length($packet || ''))
+        };
     }
     return ([unpack('N3', $packet)]);
 }
 
-sub parse_piece ($) {
+sub parse_piece {
     my ($packet) = @_;
     if ((!$packet) || (length($packet) < 9)) {
-        carp sprintf('Incorrect packet length for PIECE (%d requires >=9)',
-                     length($packet || ''));
-        return;
+        return {
+            error =>
+                sprintf('Incorrect packet length for PIECE (%d requires >=9)',
+                        length($packet || ''))
+        };
     }
     return ([unpack('N2a*', $packet)]);
 }
 
-sub parse_cancel ($) {
+sub parse_cancel {
     my ($packet) = @_;
     if ((!$packet) || (length($packet) < 9)) {
-        carp sprintf('Incorrect packet length for CANCEL (%d requires >=9)',
-                     length($packet || ''));
-        return;
+        return {error =>
+                    sprintf(
+                       'Incorrect packet length for CANCEL (%d requires >=9)',
+                       length($packet || ''))
+        };
     }
     return ([unpack('N3', $packet)]);
 }
 
-sub parse_port ($) {
+sub parse_port {
     my ($packet) = @_;
     if ((!$packet) || (length($packet) < 1)) {
-        carp 'Incorrect packet length for PORT';
-        return;
+        return {error => 'Incorrect packet length for PORT'};
     }
-    return (unpack 'N', $packet);
+    return (unpack 'nn', $packet);
 }
 1;
 
@@ -264,6 +269,7 @@ Net::BitTorrent::Protocol::BEP03 - Packet Utilities for BEP03, the Basic BitTorr
     );
 
     # And the inverse...
+    use Net::BitTorrent::Protocol::BEP03 qw[:parse];
     my ($reserved, $infohash, $peerid) = parse_handshake( $handshake );
 
 =head1 Description
@@ -423,7 +429,8 @@ A bitfield packet may only be sent immediately after the
 L<handshake|/"build_handshake ( $reserved, $infohash, $peerid )"> sequence is
 completed, and before any other packets are sent. It is optional, and need not
 be sent if a client has no pieces or uses one of the Fast Extension packets:
-L<have all|/"build_have_all ( )"> or L<have none|/"build_have_none ( )">.
+L<have all|Net::BitTorrent::Protocol::BEP06/"build_have_all ( )"> or
+L<have none|Net::BitTorrent::Protocol::BEP06/"build_have_none ( )">.
 
 =begin :parser
 
@@ -492,7 +499,7 @@ See Also: http://tinyurl.com/NB-docs-EndGame - End Game
 
 =item C<build_port ( $port )>
 
-Creates a port packet.
+Creates a packet containing the listen port a peer's DHT node is listening on.
 
 Please note that the port packet has been replaced by parts of the
 L<extension protocol|Net::BitTorrent::Protocol::BEP10> and is no longer used
@@ -504,10 +511,67 @@ official specification.
 
 =head2 Parsing Functions
 
+These are the parsing counterparts for the C<build_> functions.
+
+When the packet is invalid, a hash reference is returned with a single key:
+C<error>. The value is a string describing what went wrong.
+
+Return values for valid packets are explained below.
+
 =over
 
-=item TODO ...they're there I just don't have docs for them yet. :) They're
-simply the opposite of the build functions. ...yeah.
+=item C<parse_handshake( $data )>
+
+Returns an array reference containing the C<$reserved_bytes>, C<$infohash>,
+and C<$peerid]>.
+
+=item C<parse_keepalive( $data )>
+
+Returns an empty list. Keepalive packets to not contain a playload.
+
+=item C<parse_choke( $data )>
+
+Returns an empty list. Choke packets to not contain a playload.
+
+=item C<parse_unchoke( $data )>
+
+Returns an empty list. Unchoke packets to not contain a playload.
+
+=item C<parse_interested( $data )>
+
+Returns an empty list. Interested packets to not contain a playload.
+
+=item C<parse_not_interested( $data )>
+
+Returns an empty list. Not interested packets to not contain a playload.
+
+=item C<parse_have( $data )>
+
+Returns an integer.
+
+=item C<parse_bitfield( $data )>
+
+Returns the packed bitfield in ascending order. This makes things easy when
+working with C<vec(...)>.
+
+=item C<parse_request( $data )>
+
+Returns an array reference containing the C<$index>, C<$offset>, and
+C<length>.
+
+=item C<parse_piece( $data )>
+
+Returns an array reference containing teh C<$index>, C<$offset>, and C<$data>.
+
+=item C<parse_cancel( $data )>
+
+Returns an array reference containing the C<$index>, C<$offset>, and
+C<length>.
+
+=item C<parse_port( $data )>
+
+Returns a single integer containing the listen port a peer's DHT node is
+listening on.
 
 =back
 

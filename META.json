@@ -50,11 +50,11 @@
    "provides" : {
       "Net::BitTorrent::Protocol" : {
          "file" : "lib/Net/BitTorrent/Protocol.pm",
-         "version" : "v0.9.0"
+         "version" : "v0.9.1"
       },
       "Net::BitTorrent::Protocol::BEP03" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP03.pm",
-         "version" : "v0.9.0"
+         "version" : "v0.9.1"
       },
       "Net::BitTorrent::Protocol::BEP03::Bencode" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP03/Bencode.pm",
@@ -66,7 +66,7 @@
       },
       "Net::BitTorrent::Protocol::BEP06" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP06.pm",
-         "version" : "v0.9.0"
+         "version" : "v0.9.1"
       },
       "Net::BitTorrent::Protocol::BEP07" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP07.pm",
@@ -88,12 +88,12 @@
       },
       "homepage" : "http://sankorobinson.com/net-bittorrent/",
       "license" : [
-         "http://opensource.org/licenses/artistic-license-2.0.php"
+         "http://www.perlfoundation.org/artistic_license_2_0"
       ],
       "repository" : {
          "url" : "git://github.com/sanko/net-bittorrent-protocol.git"
       },
       "x_ChangeLog" : "http://github.com/sanko/net-bittorrent-protocol/commits/"
    },
-   "version" : "v0.9.0"
+   "version" : "v0.9.1"
 }
