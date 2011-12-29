@@ -1,7 +1,7 @@
 package Net::BitTorrent::Protocol;
 use strict;
 use warnings;
-our $MAJOR = 0; our $MINOR = 9; our $PATCH = 1; our $DEV = ''; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[\S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
+our $MAJOR = 1; our $MINOR = 0; our $PATCH = 0; our $DEV = ''; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[\S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
 use lib '../../../lib';
 use Net::BitTorrent::Protocol::BEP03 qw[:all];
 use Net::BitTorrent::Protocol::BEP03::Bencode qw[:all];
@@ -35,7 +35,8 @@ use Exporter qw[];
     types => [@{$Net::BitTorrent::Protocol::BEP03::EXPORT_TAGS{types}},
               @{$Net::BitTorrent::Protocol::BEP06::EXPORT_TAGS{types}},
               @{$Net::BitTorrent::Protocol::BEP10::EXPORT_TAGS{types}}
-    ]
+    ],
+    utils => [@{$Net::BitTorrent::Protocol::BEP06::EXPORT_TAGS{utils}}]
 );
 @EXPORT_OK = sort map { @$_ = sort @$_; @$_ } values %EXPORT_TAGS;
 $EXPORT_TAGS{'all'} = \@EXPORT_OK;
@@ -198,6 +199,9 @@ Imports the packet type values from L<BEP03|Net::BitTorrent::Protocol::BEP03>,
 L<BEP06|Net::BitTorrent::Protocol::BEP06>, and
 L<BEP10|Net::BitTorrent::Protocol::BEP10>.
 
+=item C<utils>
+
+Imports the utility functions from L<BEP06|Net::BitTorrent::Protocol::BEP06>.
 =back
 
 =head1 See Also

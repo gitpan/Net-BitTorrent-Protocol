@@ -2,7 +2,7 @@ package Net::BitTorrent::Protocol::BEP23;
 use strict;
 use warnings;
 use Carp qw[carp];
-our $MAJOR = 0; our $MINOR = 9; our $PATCH = 0; our $DEV = 'rc5'; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
+our $MAJOR = 1; our $MINOR = 0; our $PATCH = 0; our $DEV = ''; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
 use vars qw[@EXPORT_OK %EXPORT_TAGS];
 use Exporter qw[];
 *import = *import = *Exporter::import;
@@ -12,9 +12,11 @@ use Exporter qw[];
 sub compact_ipv4 {
     my (@peers) = @_;
     my $return;
+    my %seen;
 PEER: for my $peer (@peers) {
         next if not $peer;
         my ($ip, $port) = @$peer;
+        next if $seen{$ip . ':' . $port}++;
         if ($ip
             !~ m[^(?:(?:(?:25[0-5]|2[0-4][0-9]|[0-1]?[0-9]{1,2})[.]?){4})$])
         {   carp 'Invalid IPv4 address: ' . $ip;

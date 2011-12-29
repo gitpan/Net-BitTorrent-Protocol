@@ -2,7 +2,7 @@ package Net::BitTorrent::Protocol::BEP07;
 use strict;
 use warnings;
 use Carp qw[carp];
-our $MAJOR = 0; our $MINOR = 9; our $PATCH = 0; our $DEV = 'rc5'; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
+our $MAJOR = 1; our $MINOR = 0; our $PATCH = 0; our $DEV = ''; our $VERSION = sprintf('%0d.%0d.%0d' . ($DEV =~ m[S] ? '-%s' : ''), $MAJOR, $MINOR, $PATCH, $DEV);
 use vars qw[@EXPORT_OK %EXPORT_TAGS];
 use Exporter qw[];
 *import = *import = *Exporter::import;
@@ -10,26 +10,26 @@ use Exporter qw[];
 %EXPORT_TAGS = (all => [@EXPORT_OK], bencode => [@EXPORT_OK]);
 
 sub uncompact_ipv6 {
-    my %peers;
-    $peers{sprintf("%X:%X:%X:%X:%X:%X:%X:%X:%s", unpack('n9', $1))}++
-        while ($_[0] =~ s[^(.{18})][]g);
-    return keys %peers;
+    return $_[0] ?
+        map {
+        my (@h) = unpack 'n*', $_;
+        [sprintf('%X:%X:%X:%X:%X:%X:%X:%X', @h), $h[-1]]
+        } $_[0] =~ m[(.{20})]g
+        : ();
 }
 
 sub compact_ipv6 {
-    my (@peers) = @_;
-    @peers || return;
     my $return;
     my %seen;
-PEER: for my $peer (grep(defined && !$seen{$_}++, @peers)) {
-        next if not $peer;
-        my ($ip, $port) = ($peer =~ m[^([\da-f:]+):(\d+)$]i);
+PEER: for my $peer (grep(defined && !$seen{$_}++, @_)) {
+        my ($ip, $port) = @$peer;
+        $ip // next;
         if ($port > 2**16) {
             carp 'Port number beyond ephemeral range: ' . $peer;
         }
         else {
             next PEER unless $ip;
-            if ($ip =~ /^(.*):(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
+            if ($ip =~ /^(.+):(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
             {    # mixed hex, dot-quad
                 next PEER if $2 > 255 || $3 > 255 || $4 > 255 || $5 > 255;
                 $ip = sprintf("%s:%X%02X:%X%02X", $1, $2, $3, $4, $5)
@@ -38,8 +38,8 @@ PEER: for my $peer (grep(defined && !$seen{$_}++, @peers)) {
             my $c;
             next PEER
                 if $ip =~ /[^:0-9a-fA-F]/ ||    # non-hex character
-                    (($c = $ip) =~ s/::/x/ && $c =~ /(?:x|:):/)
-                    ||                          # double :: ::?
+                    #(($c = $ip) =~ s/::/x/ && $c =~ /(?:x|:):/)
+                    #||                          # double :: ::?
                     $ip =~ /[0-9a-fA-F]{5,}/;   # more than 4 digits
             $c = $ip =~ tr/:/:/;                # count the colons
             next PEER if $c < 7 && $ip !~ /::/;
@@ -49,9 +49,8 @@ PEER: for my $peer (grep(defined && !$seen{$_}++, @peers)) {
             }
             $ip =~ s/::/:::/ while $c++ < 7;    # expand compressed fields
             $ip .= 0 if $ip =~ /:$/;
-            my @hex = split(/:/, $ip);
-            $hex[$_] = hex($hex[$_] || 0) foreach (0 .. $#hex);
-            $return .= uc pack('n9', @hex, $port);
+            next if $seen{$ip . '|'. $port}++;
+            $return .= pack('H36', join '', split /:/, $ip) . pack 'n', $port;
         }
     }
     return $return;
@@ -86,14 +85,15 @@ L<uncompact|/"uncompact_ipv6 ( STRING )">.
 
 =item C<compact_ipv6 ( @list )>
 
-Compacts a list of IPv6:port strings into a single string.
+Compacts a list of [IPv6, port] values into a single string.
 
-A compact peer is 18 bytes; the first 15 bytes are the host and the last two
+A compact peer is 18 bytes; the first 16 bytes are the host and the last two
 bytes are the port.
 
 =item C<uncompact_ipv6 ( $string )>
 
-Inflates a compacted string of peers and returns a list of IPv6:port strings.
+Inflates a compacted string of peers and returns a list of [IPv6, port]
+values.
 
 =back
 
@@ -101,9 +101,7 @@ Inflates a compacted string of peers and returns a list of IPv6:port strings.
 
 =over
 
-=item BEP 07: IPv6 Tracker Extension
-
-http://bittorrent.org/beps/bep_0007.html
+=item BEP 07: IPv6 Tracker Extension - http://bittorrent.org/beps/bep_0007.html
 
 =back
 

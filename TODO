@@ -1,12 +1,12 @@
 Unwritten...
  - ::BEP32 DHT ext for IPv6
+ - Parsing functions for :::BEP05
 
-Already in dist but require tests and/or docs...
- - ::BEP07 Compact ipv6
- - ::BEP23 Compact ipv4
- - ::BEP05 DHT
- - parsing functions in ::BEP03
+Already in dist but require tests...
+ - ::BEP05 (DHT)
 
 Ideas...
  - compact( ... ) and uncompact( ... ) to wrap both BEP23 and BEP07 functions
- - move AnyEvent::BitTorrent in example dir to a separate dist
+
+Bugs
+ - Everything IPv6 related is considered incomplete or incorrect

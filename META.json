@@ -12,7 +12,8 @@
       "Utility",
       "Bencode",
       "Compact",
-      "Peers"
+      "Peers",
+      "BEP"
    ],
    "license" : [
       "artistic_2"
@@ -41,8 +42,8 @@
       "runtime" : {
          "requires" : {
             "Carp" : 0,
+            "Digest::SHA" : "1",
             "Exporter" : 0,
-            "Module::Build" : "0.38",
             "perl" : "v5.10.0"
          }
       }
@@ -50,35 +51,35 @@
    "provides" : {
       "Net::BitTorrent::Protocol" : {
          "file" : "lib/Net/BitTorrent/Protocol.pm",
-         "version" : "v0.9.1"
+         "version" : "v1.0.0"
       },
       "Net::BitTorrent::Protocol::BEP03" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP03.pm",
-         "version" : "v0.9.1"
+         "version" : "v1.0.0"
       },
       "Net::BitTorrent::Protocol::BEP03::Bencode" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP03/Bencode.pm",
-         "version" : "v0.9.0"
+         "version" : "v1.0.0"
       },
       "Net::BitTorrent::Protocol::BEP05" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP05.pm",
-         "version" : "v0.9.0"
+         "version" : "v0.9.1"
       },
       "Net::BitTorrent::Protocol::BEP06" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP06.pm",
-         "version" : "v0.9.1"
+         "version" : "v1.0.0"
       },
       "Net::BitTorrent::Protocol::BEP07" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP07.pm",
-         "version" : "v0.9.0"
+         "version" : "v1.0.0"
       },
       "Net::BitTorrent::Protocol::BEP10" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP10.pm",
-         "version" : "v0.9.0"
+         "version" : "v1.0.0"
       },
       "Net::BitTorrent::Protocol::BEP23" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP23.pm",
-         "version" : "v0.9.0"
+         "version" : "v1.0.0"
       }
    },
    "release_status" : "stable",
@@ -95,5 +96,5 @@
       },
       "x_ChangeLog" : "http://github.com/sanko/net-bittorrent-protocol/commits/"
    },
-   "version" : "v0.9.1"
+   "version" : "v1.0.0"
 }
