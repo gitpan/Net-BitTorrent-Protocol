@@ -9,14 +9,14 @@ Functions
     In addition to the functions found in Net::BitTorrent::Protocol::BEP03,
     Net::BitTorrent::Protocol::BEP03::Bencode,
     Net::BitTorrent::Protocol::BEP06, Net::BitTorrent::Protocol::BEP07,
-    Net::BitTorrent::Protocol::BEP10, Net::BitTorrent::Protocol::BEP23,
-    TODO..., a function which wraps all the packet parsing functions is
-    provided:
+    Net::BitTorrent::Protocol::BEP09, Net::BitTorrent::Protocol::BEP10,
+    Net::BitTorrent::Protocol::BEP23, TODO..., a function which wraps all
+    the packet parsing functions is provided:
 
-    `parse_packet( \$data )'
+    "parse_packet( \$data )"
         Attempts to parse any known packet from the data (a scalar ref)
         passed to it. On success, the payload and type are returned and the
-        packet is removed from the incoming data reference. `undef' is
+        packet is removed from the incoming data reference. "undef" is
         returned on failure and the data in the reference is unchanged.
 
 Importing from Net::BitTorrent::Protocol
@@ -30,68 +30,81 @@ Importing from Net::BitTorrent::Protocol
 
     Supported tags include...
 
-    `all'
+    "all"
         Imports everything.
 
-    `build'
-        Imports all packet building functions from BEP03, BEP03, BEP06, and
-        BEP10.
+    "build"
+        Imports all packet building functions from BEP03, BEP03, BEP06,
+        BEP06, and BEP10.
 
-    `bencode'
+    "bencode"
         Imports the bencode and bdecode functions found in BEP03.
 
-    `compact'
+    "compact"
         Imports the compact and inflation functions for IPv4 (BEP23) and
         IPv6 (BEP07) peer lists.
 
-    `dht'
+    "dht"
         Imports all functions related to BEP05.
 
-    `parse'
+    "parse"
         Imports all packet parsing functions from BEP03, BEP06, and BEP10 as
-        well as the locally defined `parse_packet( ... )' function.
+        well as the locally defined "parse_packet( ... )" function.
 
-    `types'
+    "types"
         Imports the packet type values from BEP03, BEP06, and BEP10.
 
-    `utils'
+    "utils"
         Imports the utility functions from BEP06. =back
 
 See Also
-        AnyEvent::BitTorrent - Simple client which uses
-        Net::BitTorrent::Protocol
+    AnyEvent::BitTorrent - Simple client which uses
+    Net::BitTorrent::Protocol
 
-        http://bittorrent.org/beps/bep_0003.html - The BitTorrent Protocol
-        Specification
+    http://bittorrent.org/beps/bep_0003.html - The BitTorrent Protocol
+    Specification
 
-        http://bittorrent.org/beps/bep_0006.html - Fast Extension
+    http://bittorrent.org/beps/bep_0006.html - Fast Extension
 
-        http://bittorrent.org/beps/bep_0010.html - Extension Protocol
+    http://bittorrent.org/beps/bep_0009.html - Extension for Peers to Send
+    Metadata Files
 
-        http://wiki.theory.org/BitTorrentSpecification - An annotated guide
-        to the BitTorrent protocol
+    http://bittorrent.org/beps/bep_0010.html - Extension Protocol
 
-        Net::BitTorrent::PeerPacket - by Joshua McAdams
+    http://wiki.theory.org/BitTorrentSpecification - An annotated guide to
+    the BitTorrent protocol
 
-        Protocol::BitTorrent - by Tom Molesworth
+    Net::BitTorrent::PeerPacket - by Joshua McAdams
+
+    Protocol::BitTorrent - by Tom Molesworth
 
 Author
-        Sanko Robinson <sanko@cpan.org> - http://sankorobinson.com/
+    Sanko Robinson <sanko@cpan.org> - http://sankorobinson.com/
 
-        CPAN ID: SANKO
+    CPAN ID: SANKO
 
 License and Legal
-        Copyright (C) 2008-2012 by Sanko Robinson <sanko@cpan.org>
+    Copyright (C) 2008-2014 by Sanko Robinson <sanko@cpan.org>
 
-        This program is free software; you can redistribute it and/or modify
-        it under the terms of The Artistic License 2.0. See the LICENSE file
-        included with this distribution or notes on the Artistic License 2.0
-        for clarification.
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of The Artistic License 2.0
+    <http://www.perlfoundation.org/artistic_license_2_0>. See the LICENSE
+    file included with this distribution or notes on the Artistic License
+    2.0 <http://www.perlfoundation.org/artistic_2_0_notes> for
+    clarification.
 
-        When separated from the distribution, all original POD documentation
-        is covered by the Creative Commons Attribution-Share Alike 3.0
-        License. See the clarification of the CCA-SA3.0.
+    When separated from the distribution, all original POD documentation is
+    covered by the Creative Commons Attribution-Share Alike 3.0 License
+    <http://creativecommons.org/licenses/by-sa/3.0/us/legalcode>. See the
+    clarification of the CCA-SA3.0
+    <http://creativecommons.org/licenses/by-sa/3.0/us/>.
 
-        Neither this module nor the Author is affiliated with BitTorrent,
-        Inc.
+    Neither this module nor the Author is affiliated with BitTorrent, Inc.
+
+POD ERRORS
+    Hey! The above document had some coding errors, which are explained
+    below:
+
+    Around line 211:
+        You forgot a '=back' before '=head1'
 
