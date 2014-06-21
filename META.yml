@@ -1,32 +1,28 @@
 ---
 abstract: 'Basic, Protocol-level BitTorrent Utilities'
 author:
-  - 'Sanko Robinson <sanko@cpan.org>'
+  - 'Sanko Robinson <sanko@cpan.org> - http://sankorobinson.com/'
 build_requires:
-  Carp: '0'
-  Exporter: '0'
-  Module::Build: '0.38'
-  Test::More: '0'
-  perl: v5.10.0
+  Test::More: '0.98'
 configure_requires:
-  File::Find: '0'
-  Module::Build: '0.38'
-dynamic_config: 1
-generated_by: 'Module::Build version 0.4205, CPAN::Meta::Converter version 2.141520'
-keywords:
-  - BitTorrent
-  - Protocol
-  - Packet
-  - Utility
-  - Bencode
-  - Compact
-  - Peers
-  - BEP
+  Module::Build::Tiny: '0.035'
+dynamic_config: 0
+generated_by: 'Minilla/v1.1.0, CPAN::Meta::Converter version 2.141520'
 license: artistic_2
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: '1.4'
 name: Net-BitTorrent-Protocol
+no_index:
+  directory:
+    - t
+    - xt
+    - inc
+    - share
+    - eg
+    - examples
+    - author
+    - builder
 provides:
   Net::BitTorrent::Protocol:
     file: lib/Net/BitTorrent/Protocol.pm
@@ -46,6 +42,9 @@ provides:
   Net::BitTorrent::Protocol::BEP07:
     file: lib/Net/BitTorrent/Protocol/BEP07.pm
     version: v1.0.0
+  Net::BitTorrent::Protocol::BEP09:
+    file: lib/Net/BitTorrent/Protocol/BEP09.pm
+    version: v1.0.1
   Net::BitTorrent::Protocol::BEP10:
     file: lib/Net/BitTorrent/Protocol/BEP10.pm
     version: v1.0.0
@@ -53,14 +52,9 @@ provides:
     file: lib/Net/BitTorrent/Protocol/BEP23.pm
     version: v1.0.0
 requires:
-  Carp: '0'
-  Digest::SHA: '0'
-  Exporter: '0'
-  perl: v5.10.0
+  perl: '5.008001'
 resources:
-  bugtracker: http://github.com/sanko/net-bittorrent/issues
-  changeLog: http://github.com/sanko/net-bittorrent-protocol/commits/
-  homepage: http://sankorobinson.com/net-bittorrent/
-  license: http://opensource.org/licenses/artistic-license-2.0.php
+  bugtracker: https://github.com/sanko/net-bittorrent-protocol/issues
+  homepage: https://github.com/sanko/net-bittorrent-protocol
   repository: git://github.com/sanko/net-bittorrent-protocol.git
-version: v1.0.1
+version: 1.0.1

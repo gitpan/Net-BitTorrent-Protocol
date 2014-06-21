@@ -1,20 +1,10 @@
 {
    "abstract" : "Basic, Protocol-level BitTorrent Utilities",
    "author" : [
-      "Sanko Robinson <sanko@cpan.org>"
+      "Sanko Robinson <sanko@cpan.org> - http://sankorobinson.com/"
    ],
-   "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4205",
-   "keywords" : [
-      "BitTorrent",
-      "Protocol",
-      "Packet",
-      "Utility",
-      "Bencode",
-      "Compact",
-      "Peers",
-      "BEP"
-   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v1.1.0",
    "license" : [
       "artistic_2"
    ],
@@ -23,28 +13,41 @@
       "version" : "2"
    },
    "name" : "Net-BitTorrent-Protocol",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author",
+         "builder"
+      ]
+   },
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "Carp" : "0",
-            "Exporter" : "0",
-            "Module::Build" : "0.38",
-            "Test::More" : "0",
-            "perl" : "v5.10.0"
-         }
-      },
       "configure" : {
          "requires" : {
-            "File::Find" : "0",
-            "Module::Build" : "0.38"
+            "Module::Build::Tiny" : "0.035"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.04",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.2.7"
          }
       },
       "runtime" : {
          "requires" : {
-            "Carp" : "0",
-            "Digest::SHA" : "0",
-            "Exporter" : "0",
-            "perl" : "v5.10.0"
+            "perl" : "5.008001"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.98"
          }
       }
    },
@@ -73,6 +76,10 @@
          "file" : "lib/Net/BitTorrent/Protocol/BEP07.pm",
          "version" : "v1.0.0"
       },
+      "Net::BitTorrent::Protocol::BEP09" : {
+         "file" : "lib/Net/BitTorrent/Protocol/BEP09.pm",
+         "version" : "v1.0.1"
+      },
       "Net::BitTorrent::Protocol::BEP10" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP10.pm",
          "version" : "v1.0.0"
@@ -85,16 +92,13 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "http://github.com/sanko/net-bittorrent/issues"
+         "web" : "https://github.com/sanko/net-bittorrent-protocol/issues"
       },
-      "homepage" : "http://sankorobinson.com/net-bittorrent/",
-      "license" : [
-         "http://opensource.org/licenses/artistic-license-2.0.php"
-      ],
+      "homepage" : "https://github.com/sanko/net-bittorrent-protocol",
       "repository" : {
-         "url" : "git://github.com/sanko/net-bittorrent-protocol.git"
-      },
-      "x_changeLog" : "http://github.com/sanko/net-bittorrent-protocol/commits/"
+         "url" : "git://github.com/sanko/net-bittorrent-protocol.git",
+         "web" : "https://github.com/sanko/net-bittorrent-protocol"
+      }
    },
-   "version" : "v1.0.1"
+   "version" : "1.0.1"
 }
