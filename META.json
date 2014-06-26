@@ -42,19 +42,20 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001"
+            "perl" : "5.010000"
          }
       },
       "test" : {
          "requires" : {
-            "Test::More" : "0.98"
+            "Test::More" : "0.98",
+            "perl" : "5.010000"
          }
       }
    },
    "provides" : {
       "Net::BitTorrent::Protocol" : {
          "file" : "lib/Net/BitTorrent/Protocol.pm",
-         "version" : "v1.0.1"
+         "version" : "v1.0.2"
       },
       "Net::BitTorrent::Protocol::BEP03" : {
          "file" : "lib/Net/BitTorrent/Protocol/BEP03.pm",
@@ -100,5 +101,5 @@
          "web" : "https://github.com/sanko/net-bittorrent-protocol"
       }
    },
-   "version" : "1.0.1"
+   "version" : "1.0.2"
 }

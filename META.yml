@@ -4,10 +4,11 @@ author:
   - 'Sanko Robinson <sanko@cpan.org> - http://sankorobinson.com/'
 build_requires:
   Test::More: '0.98'
+  perl: '5.010000'
 configure_requires:
   Module::Build::Tiny: '0.035'
 dynamic_config: 0
-generated_by: 'Minilla/v1.1.0, CPAN::Meta::Converter version 2.141520'
+generated_by: 'Minilla/v1.1.0, CPAN::Meta::Converter version 2.141170'
 license: artistic_2
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -26,7 +27,7 @@ no_index:
 provides:
   Net::BitTorrent::Protocol:
     file: lib/Net/BitTorrent/Protocol.pm
-    version: v1.0.1
+    version: v1.0.2
   Net::BitTorrent::Protocol::BEP03:
     file: lib/Net/BitTorrent/Protocol/BEP03.pm
     version: v1.0.0
@@ -52,9 +53,9 @@ provides:
     file: lib/Net/BitTorrent/Protocol/BEP23.pm
     version: v1.0.0
 requires:
-  perl: '5.008001'
+  perl: '5.010000'
 resources:
   bugtracker: https://github.com/sanko/net-bittorrent-protocol/issues
   homepage: https://github.com/sanko/net-bittorrent-protocol
   repository: git://github.com/sanko/net-bittorrent-protocol.git
-version: 1.0.1
+version: 1.0.2
